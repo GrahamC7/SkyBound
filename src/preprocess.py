@@ -1,36 +1,46 @@
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
 
-def load_and_preprocess():
+def preprocess_data():
     """
-    Loads the sample dataset, cleans missing values, normalizes numerical features,
-    and saves the processed dataset.
+    Loads, cleans, and filters the space missions dataset to include only
+    launches from Cape Canaveral. Converts launch status to 'Go' or 'No-Go'.
+    Saves the processed dataset as 'processed_launch_data.csv'.
     """
+
     print("📂 Loading dataset...")
 
     # Load the dataset
-    df = pd.read_csv("../data/sample_launch_data.csv")
+    file_path = "../data/Space_Corrected.csv"
+    df = pd.read_csv(file_path)
 
-    # Check for missing values and fill them if necessary
-    if df.isnull().sum().sum() > 0:
-        print("⚠️ Missing values detected! Filling missing values...")
-        df.fillna(method="ffill", inplace=True)
+    # Display available columns
+    print("📊 Columns in dataset:", df.columns)
 
-    # Normalize numerical features
-    scaler = MinMaxScaler()
-    numerical_features = ["temperature", "wind_speed", "humidity", "cloud_cover", "pressure"]
-    df[numerical_features] = scaler.fit_transform(df[numerical_features])
+    # Drop unnecessary columns
+    df = df[['Datum', 'Location', 'Status Mission']]
 
-    # Ensure target column is present
-    if "launch_status" not in df.columns:
-        raise ValueError("Missing target column 'launch_status' in dataset!")
+    # Filter only launches from Cape Canaveral
+    df = df[df['Location'].str.contains("Cape Canaveral", case=False, na=False)]
 
-    # Save cleaned dataset
+    # Convert 'Status Mission' to binary (1 = Go, 0 = No-Go)
+    df['launch_status'] = df['Status Mission'].apply(lambda x: 1 if "Success" in x else 0)
+
+    # Convert 'Datum' column to standard date format
+    df['Datum'] = pd.to_datetime(df['Datum'], errors='coerce')
+
+    # Remove rows where date conversion failed
+    df = df.dropna(subset=['Datum'])
+
+    # Rename columns for clarity
+    df.rename(columns={'Datum': 'date', 'Location': 'launch_location'}, inplace=True)
+
+    # Save the processed dataset
     processed_file_path = "../data/processed_launch_data.csv"
     df.to_csv(processed_file_path, index=False)
 
     print(f"✅ Data preprocessed and saved as '{processed_file_path}'")
-    print(df.head())  # Display the first few rows of processed data
+    print(df.head())  # Display first few rows
 
 if __name__ == "__main__":
-    load_and_preprocess()
+    preprocess_data()
+
