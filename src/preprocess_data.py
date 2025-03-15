@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 # Load merged dataset
@@ -14,13 +15,20 @@ print(missing_values[missing_values > 0])
 # Step 2: Handle missing values (impute or remove)
 df.fillna(method="ffill", inplace=True)  # Forward fill missing values
 
-# Step 3: Convert categorical data to numerical
-if 'go_nogo' in df.columns:  # Assuming 'go_nogo' is the target variable
-    label_encoder = LabelEncoder()
-    df['go_nogo'] = label_encoder.fit_transform(df['go_nogo'])  # Encode Yes/No to 1/0
+# Define the target column
+target_column = "launch_status"
 
-# Step 4: Normalize numerical features
+# Step 3: Convert categorical target variable to binary (if applicable)
+if target_column in df.columns:
+    df[target_column] = np.where(df[target_column] > 0, 1, 0)  # Ensure binary format
+
+# Debugging check
+print(f"✅ Fixed '{target_column}' values: {df[target_column].unique()}")
+
+# Step 4: Normalize numerical features (EXCLUDING target column)
 numeric_features = df.select_dtypes(include=['float64', 'int64']).columns
+numeric_features = numeric_features.drop(target_column, errors="ignore")  # Exclude target column
+
 scaler = StandardScaler()
 df[numeric_features] = scaler.fit_transform(df[numeric_features])
 
