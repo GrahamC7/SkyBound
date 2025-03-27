@@ -1,122 +1,171 @@
-# 🚀 SkyBound: Rocket Launch Go/No-Go Prediction System  
+# 🚀 SkyBound: Rocket Launch Go/No-Go Prediction System
 
-## 📌 Project Overview  
+## 📌 Overview
 
-SkyBound is a machine learning-powered prediction system that determines whether a rocket launch should proceed or be delayed based on real-time weather conditions. Using historical launch data and weather factors, the model predicts a **Go/No-Go** decision to assist launch providers in making informed scheduling decisions.
-
----
-
-## 🌟 Features  
-
-- **Historical Data Analysis** – Uses past launch events and weather conditions to train an ML model.  
-- **Machine Learning Model** – Implements **XGBoost** for accurate predictions.  
-- **Real-Time Weather Integration** – Fetches live weather data from the **Open-Meteo API**.  
-- **User Input Support** – Users can select a date (up to 7 days out) for a launch forecast.  
-- **Interactive Jupyter Notebook UI** – Provides an easy-to-use interface for predictions.  
-- **Visualization & Model Performance**:  
-  1. **Confusion Matrix** – Evaluates model accuracy.  
-  2. **Feature Importance Graph** – Highlights weather factors affecting launches.  
-  3. **Threshold Comparison** – Shows prediction variations at different confidence levels.  
+SkyBound is a machine learning-powered application that predicts whether a rocket launch should proceed or be delayed based on real-time or forecasted weather conditions. The system leverages historical launch and weather data to train a model capable of issuing **Go/No-Go** decisions along with confidence scores.
 
 ---
 
-## 🛰️ How It Works  
+## 🌟 Features
 
-1. **Preprocess Data** – Cleans and normalizes historical launch and weather data.  
-2. **Train ML Model** – Uses **XGBoost classification** to predict Go/No-Go.  
-3. **Fetch Live Weather** – Pulls real-time weather forecasts for the next 7 days.  
-4. **Predict Launch Decision** – Uses trained ML model to classify launch status.  
-5. **Log Predictions** – Maintains a log of past forecasts for monitoring and evaluation.  
-
----
-
-## 🛠️ Tech Stack  
-
-- **Python** (Pandas, NumPy, Scikit-Learn, Matplotlib, Seaborn, XGBoost)  
-- **Jupyter Notebook** – Interactive interface for user input & predictions  
-- **Open-Meteo API** – Real-time weather data  
-- **PyCharm** – Primary development environment  
-- **Git & GitHub** – Version control & collaboration  
+- **Go/No-Go Launch Decision** based on live or forecasted weather
+- **XGBoost Machine Learning Model** trained on NASA and NOAA historical data
+- **Two Usage Modes**:
+  - 📆 **Forecast-based via SkyBound\_Predictions.ipynb**
+  - ⌨️ **Real-time/manual input via predict\_launch.ipynb**
+- **Three Visualizations**:
+  1. Confusion Matrix
+  2. Feature Importance
+  3. Threshold Comparison
+- **CLI Access** via `main.py`
+- **Built-in Logging** of predictions and API errors
 
 ---
 
-## 📌 Installation & Setup  
+## 🛠️ System Requirements
 
-### 1️⃣ Clone the Repository  
+- Windows 10
+- Python 3.x
+- Jupyter Notebook
+- Python packages listed in `requirements.txt`
 
-```sh
-git clone https://github.com/your-username/SkyBound.git
-cd SkyBound
+---
+
+## 📦 Installation Instructions
+
+1. **Clone or Download the Repository**
+
+   ```bash
+   git clone https://github.com/GrahamC7/Skybound.git
+   cd Skybound
+   ```
+
+   Or download ZIP via GitHub and extract it.
+
+2. **Install Python & pip**\
+   Download from [python.org](https://www.python.org/downloads/) and ensure `pip` is included.
+
+3. **Install Dependencies**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Install Jupyter Notebook (if needed)**
+
+   ```bash
+   pip install notebook
+   ```
+
+5. **Install XGBoost (if needed)**
+
+   ```bash
+   pip install xgboost
+   ```
+
+---
+
+## 🚀 How to Run the Application
+
+### Option 1: **Command-Line Interface**
+
+```bash
+python main.py
 ```
 
-### 2️⃣ Install Dependencies  
+- Loads pre-trained model
+- Fetches current weather for Cape Canaveral
+- Outputs Go/No-Go prediction and confidence score
 
-```sh
-pip install -r requirements.txt
+> 💡 If using a virtual environment:
+
+```bash
+.\.venv\Scripts\activate
+python main.py
 ```
 
-### 3️⃣ Run Data Preprocessing  
+---
 
-```sh
-python src/preprocess.py
+### Option 2: **Jupyter Notebook Interface**
+
+#### 📆 `SkyBound_Predictions.ipynb`
+
+- Uses Open-Meteo API to pull 7-day forecast
+- Interactive date slider for future launch days
+- Produces Go/No-Go prediction with confidence score
+
+#### ⌨️ `predict_launch.ipynb`
+
+- Prompts user to choose:
+  - 🛰️ Use real-time weather data
+  - ✍️ Manually input weather parameters
+- Displays launch decision + logs the prediction
+
+> Both notebooks require executing cells in order after opening in Jupyter.
+
+---
+
+## 📊 Visualizations
+
+Included in the project are:
+
+- **Confusion Matrix** – Classification accuracy overview
+- **Feature Importance Plot** – Shows weight of each weather factor
+- **Threshold Comparison Graph** – Varying cutoff impact on results
+
+These visuals support transparency and help fine-tune launch risk tolerance.
+
+---
+
+## 🐞 Troubleshooting
+
+- **Python not recognized?** Add Python to your PATH or reinstall.
+- **ModuleNotFoundError?** Run `pip install xgboost` or missing package.
+- **Jupyter not found?** Install with `pip install notebook`.
+- **Kernel issues?**
+  - Go to *Kernel > Change Kernel* in Jupyter
+  - Or run:
+    ```bash
+    python -m ipykernel install --user --name=skybound-env --display-name "Python (SkyBound)"
+    ```
+
+---
+
+## 📁 File Structure
+
+```plaintext
+.
+├── main.py                        # CLI launcher
+├── /src                          # Source scripts
+│   ├── fetch_weather.py
+│   ├── predict_launch.py
+│   ├── train_model.py
+│   └── ...
+├── /models                       # Saved trained model
+│   └── xgboost_best_model.pkl
+├── SkyBound_Predictions.ipynb    # Forecast-based UI
+├── predict_launch.ipynb          # Real-time/manual UI
+├── requirements.txt
+└── README.md
 ```
 
-### 4️⃣ Train the Machine Learning Model  
+---
 
-```sh
-python src/train_model.py
-```
+## 📜 License
 
-### 5️⃣ Run Predictions via Jupyter Notebook  
-
-```sh
-jupyter notebook
-```
-- Open `SkyBound_Predictions.ipynb`
-- Select a **date up to 7 days out** and get a **Go/No-Go** prediction!  
+MIT License – Free to use and modify.
 
 ---
 
-## 📊 Visualizations  
+## 👨‍🚀 Author
 
-SkyBound provides key insights into launch decision factors using three visualizations:  
-
-1. **Confusion Matrix** – Evaluates the accuracy of the ML model.  
-2. **Feature Importance** – Identifies the most influential weather conditions.  
-3. **Threshold Comparison** – Examines prediction outcomes at different confidence thresholds.  
+**Graham Cockerham**\
+Bachelor of Science in Computer Science\
+Western Governors University
 
 ---
 
-## 🔐 Security Considerations  
+## 🛠 Contributing
 
-- API keys are **not required** for Open-Meteo (no hardcoded credentials).  
-- User input is handled securely within the Jupyter Notebook UI.  
-- **Error logging & monitoring** are implemented for API failures & prediction tracking.  
-
----
-
-## 📜 License  
-
-MIT License – Feel free to modify and contribute.  
-
----
-
-## 🚀 Author  
-
-**Graham Cockerham**  
-**Bachelor of Science in Computer Science | Western Governors University**  
-
----
-
-## 🔹 Contributing  
-
-Pull requests are welcome! For major changes, please open an issue first to discuss your proposal.  
-
----
-
-This version reflects the **latest changes**, including:
-✔ **Switch from Random Forest to XGBoost**  
-✔ **Updated API source (Open-Meteo instead of OpenWeatherMap)**  
-✔ **Jupyter Notebook UI** instead of CLI/Flask  
-✔ **Updated security features & logging**  
+Pull requests are welcome. Please open an issue for major changes or feature proposals.
 
