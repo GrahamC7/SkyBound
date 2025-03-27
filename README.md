@@ -72,7 +72,7 @@ python src/train_model.py
 ```sh
 jupyter notebook
 ```
-- Open `SkyBound_Predictor.ipynb`
+- Open `SkyBound_Predictions.ipynb`
 - Select a **date up to 7 days out** and get a **Go/No-Go** prediction!  
 
 ---
